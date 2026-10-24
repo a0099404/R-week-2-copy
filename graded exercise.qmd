@@ -1,0 +1,75 @@
+---
+title: "week 2 stuff"
+author: "A0099404"
+date: "2026-10-24"
+format: html
+editor: visual
+---
+
+# Import
+
+In this section, we *import* the dataset given in week 2. But of course, right before that we have to load the relevant libraries (I think?)
+
+```{r, output=FALSE}
+library("readr")
+library("survival")
+library("tidyverse")
+clinic_data <- read_csv("data/clinic_raw.csv",skip=2)
+```
+
+Tada! We have assigned the datasets as an object in our environment. Next, we'll go through wrangling, which we usually spend \>90% of our time on, especially when collaborators don't understand the utility of standardising the work :(
+
+# Wrangle and Summary
+
+We'd usually like to sanitise the data before going into the operating theatre\~ but we gotta know what we're working with first.
+
+```{r}
+summary(clinic_data)
+head(clinic_data)
+```
+
+For purposes of this exercise, let's choose to describe *blood pressure by sex*. From the above output, we can see that we have 200 patients in this dataset. There are mixed spellings in sex, and blood pressure is currently behaving as a character string. We'd need to *wrangle* both variables before we can use them for analysis.
+
+## Sex
+
+```{r}
+clinic_data$sex <- ifelse(
+  toupper(clinic_data$sex) == "M","Male"
+, ifelse(toupper(clinic_data$sex)=="F","Female",NA)
+)
+```
+
+We cleaned up the "sex" column.
+
+## Blood pressure
+
+```{r}
+clinic_data$bp_sys <- as.numeric(str_extract(clinic_data$blood_pressure,"^[0-9]+"))
+```
+
+We have just extracted "123" from "123/45 mmHg" to create a new column "bp_sys".
+
+We can now proceed with a **t test** to compare if there is an association between gender and systolic blood pressure.
+
+# Analysis
+
+```{r}
+t.test(clinic_data$bp_sys~clinic_data$sex)
+```
+
+Since p-value is \>0.05, we have **failed to reject the null** and conclude that there is no association between systolic blood pressure and sex.
+
+# Visualise
+
+```{r}
+clinic_data %>%
+  filter(!is.na(sex), !is.na(bp_sys)) %>%
+  ggplot(aes(x = sex, y = bp_sys)) +
+  geom_boxplot() +
+  labs(x="Sex",
+       y="Systolic BP")
+```
+
+This gives us a **box-plot** to visualise the distribution of systolic blood pressure! Thank you for reading through my nonsense /bows/
+
+------------------------------------------------------------------------
