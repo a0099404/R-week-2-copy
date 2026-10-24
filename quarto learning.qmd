@@ -1,0 +1,59 @@
+---
+title: "My First Quarto Report"
+author: "A0099404"
+date: "2026-10-24"
+format: html
+editor: visual
+---
+
+## Introduction
+
+This report summarises a small example dataset to demonstrate how Quarto combines **code**, **test**, and *results* in one document.
+
+## The Data
+```{r}
+df = data.frame(
+  group = c("A","A","B","B"),
+  value = c(10,15,20,25)
+)
+
+df
+```
+
+## Summary
+
+```{r}
+avg_value = mean(df$value)
+avg_value
+```
+
+The average value across all groups is `r avg_value`. This sentence used **inline code** to insert that number automatically.
+
+
+## Visualization
+
+```{r}
+plot(runif(100), rnorm(100), main = "Nonsense")
+```
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
