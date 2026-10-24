@@ -178,4 +178,4 @@ clinic_clean=
   mutate(notes=clean_text(notes))
 table(clinic_clean$notes,useNA="always")
 
-2+2
+2+2+2
